@@ -3,89 +3,102 @@
  * Membership and volunteer signup form with client-side validation
  */
 
-import { useState } from 'react';
-import { CheckCircle, Users, Heart, Megaphone, Shield } from 'lucide-react';
-import SectionTitle from '../components/SectionTitle';
+import { useState } from "react";
+import { CheckCircle, Users, Heart, Megaphone, Shield } from "lucide-react";
+import SectionTitle from "../components/SectionTitle";
 
 const JoinUs = ({ organization }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
+    name: "",
+    email: "",
+    phone: "",
     organization: organization.id,
-    membershipType: 'member',
-    message: '',
+    membershipType: "member",
+    message: "",
   });
-  
+
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // 🔥 Dynamic gradient (AISF = Red, AIYF = Blue)
+  const gradient =
+    organization.id === "aisf"
+      ? "bg-gradient-to-br from-red-800 via-red-700 to-red-600"
+      : "bg-gradient-to-br from-blue-800 via-blue-700 to-blue-600";
+
+  const softGradient =
+    organization.id === "aisf"
+      ? "from-red-500/20 to-red-300/10"
+      : "from-blue-500/20 to-blue-300/10";
+
+  const glow =
+    organization.id === "aisf"
+      ? "drop-shadow-[0_0_16px_rgba(220,38,38,0.5)]"
+      : "drop-shadow-[0_0_16px_rgba(37,99,235,0.5)]";
+
+  /* ---------------- VALIDATION ---------------- */
   const validate = () => {
     const newErrors = {};
-    
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    } else if (formData.name.trim().length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
-    }
-    
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Phone number is required';
-    } else if (!/^[0-9]{10}$/.test(formData.phone.replace(/\D/g, ''))) {
-      newErrors.phone = 'Please enter a valid 10-digit phone number';
-    }
-    
+
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    else if (formData.name.length < 2)
+      newErrors.name = "Name must be at least 2 characters";
+
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+      newErrors.email = "Please enter a valid email address";
+
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+    else if (!/^[0-9]{10}$/.test(formData.phone.replace(/\D/g, "")))
+      newErrors.phone = "Please enter a valid 10-digit phone number";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (validate()) {
-      // Mock submission - no backend
-      setIsSubmitted(true);
-    }
+    if (validate()) setIsSubmitted(true);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
+    setFormData((p) => ({ ...p, [name]: value }));
+    if (errors[name]) setErrors((p) => ({ ...p, [name]: "" }));
   };
 
   const benefits = [
-    { icon: Users, title: 'Community', desc: 'Join a network of like-minded individuals' },
-    { icon: Megaphone, title: 'Voice', desc: 'Amplify your voice on issues that matter' },
-    { icon: Heart, title: 'Impact', desc: 'Make real change in your community' },
-    { icon: Shield, title: 'Support', desc: 'Get support for your rights' },
+    { icon: Users, title: "Community", desc: "Join a powerful national network" },
+    { icon: Megaphone, title: "Voice", desc: "Raise your voice on vital issues" },
+    { icon: Heart, title: "Impact", desc: "Create real social change" },
+    { icon: Shield, title: "Support", desc: "Stand protected and united" },
   ];
 
+  /* ---------------- SUCCESS STATE ---------------- */
   if (isSubmitted) {
     return (
       <main className="pt-20 min-h-screen flex items-center">
         <div className="container-custom">
-          <div className="max-w-xl mx-auto text-center py-20 animate-scale-in">
-            <div className="w-20 h-20 rounded-full hero-gradient flex items-center justify-center mx-auto mb-6">
-              <CheckCircle size={40} className="text-primary-foreground" />
+          <div className="max-w-xl mx-auto text-center py-24 animate-scale-in">
+            <div
+              className={`w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 ${gradient} ${glow}`}
+            >
+              <CheckCircle size={48} className="text-background" />
             </div>
+
             <h1 className="font-display text-3xl md:text-4xl text-foreground mb-4">
               Welcome to {organization.shortName}!
             </h1>
+
             <p className="text-muted-foreground text-lg mb-8">
-              Thank you for joining the movement, {formData.name}! We've received your 
-              application and will contact you shortly at {formData.email}.
+              Thank you for joining the movement,{" "}
+              <span className="font-semibold">{formData.name}</span>.  
+              We’ll reach out soon at{" "}
+              <span className="font-semibold">{formData.email}</span>.
             </p>
+
             <p className="text-primary font-display text-xl">
-              "{organization.tagline}"
+              “{organization.tagline}”
             </p>
           </div>
         </div>
@@ -95,196 +108,149 @@ const JoinUs = ({ organization }) => {
 
   return (
     <main className="pt-20">
-      {/* Page Header */}
-      <section className="hero-gradient py-20 md:py-32">
-        <div className="container-custom text-center">
+      {/* PAGE HEADER */}
+      <section className={`relative py-20 md:py-32 overflow-hidden ${gradient}`}>
+        <div className="absolute -top-20 right-10 w-96 h-96 bg-background/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-10 w-72 h-72 bg-background/10 rounded-full blur-3xl" />
+
+        <div className="container-custom text-center relative z-10">
           <h1 className="font-display text-4xl md:text-6xl text-background mb-6 animate-fade-up">
             Join {organization.shortName}
           </h1>
-          <p className="text-xl text-background/80 max-w-2xl mx-auto animate-fade-up" style={{ animationDelay: '0.1s' }}>
-            Become part of India's largest {organization.id === 'aisf' ? 'student' : 'youth'} movement 
-            and help shape a better future.
+          <p
+            className="text-xl text-background/80 max-w-2xl mx-auto animate-fade-up"
+            style={{ animationDelay: "0.1s" }}
+          >
+            Become part of India’s largest{" "}
+            {organization.id === "aisf" ? "student" : "youth"} movement and help
+            shape a better future.
           </p>
         </div>
       </section>
 
-      {/* Benefits Section */}
+      {/* BENEFITS */}
       <section className="section-padding bg-secondary">
         <div className="container-custom">
-          <SectionTitle
-            subtitle="Why Join"
-            title="Benefits of Membership"
-          />
-          
+          <SectionTitle subtitle="Why Join" title="Benefits of Membership" />
+
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {benefits.map((benefit, index) => (
-              <div 
-                key={benefit.title}
-                className="bg-card p-6 rounded-xl border border-border text-center card-hover animate-fade-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
+            {benefits.map((b, i) => (
+              <div
+                key={b.title}
+                className="bg-card p-6 rounded-xl border border-border
+                           text-center transition-all
+                           hover:-translate-y-1 hover:shadow-xl
+                           animate-fade-up"
+                style={{ animationDelay: `${i * 0.1}s` }}
               >
-                <div className="w-14 h-14 rounded-full hero-gradient flex items-center justify-center mx-auto mb-4">
-                  <benefit.icon size={24} className="text-primary-foreground" />
+                <div
+                  className={`w-14 h-14 rounded-xl flex items-center
+                              justify-center mx-auto mb-4 ${gradient}`}
+                >
+                  <b.icon size={24} className="text-background" />
                 </div>
-                <h3 className="font-display text-lg text-foreground mb-2">{benefit.title}</h3>
-                <p className="text-muted-foreground text-sm">{benefit.desc}</p>
+                <h3 className="font-display text-lg text-foreground mb-2">
+                  {b.title}
+                </h3>
+                <p className="text-muted-foreground text-sm">{b.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Form Section */}
+      {/* FORM */}
       <section className="section-padding">
         <div className="container-custom">
           <div className="max-w-2xl mx-auto">
-            <SectionTitle
-              subtitle="Registration"
-              title="Fill Out the Form"
-            />
-            
+            <SectionTitle subtitle="Registration" title="Fill Out the Form" />
+
             <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-              {/* Name Field */}
-              <div>
-                <label htmlFor="name" className="block font-semibold text-foreground mb-2">
-                  Full Name <span className="text-primary">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="Enter your full name"
-                  className={`w-full px-4 py-3 rounded-lg border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all ${
-                    errors.name ? 'border-destructive' : 'border-border'
-                  }`}
-                  aria-describedby={errors.name ? 'name-error' : undefined}
-                />
-                {errors.name && (
-                  <p id="name-error" className="mt-2 text-sm text-destructive">{errors.name}</p>
-                )}
-              </div>
+              {[
+                { label: "Full Name", name: "name", type: "text", required: true },
+                { label: "Email Address", name: "email", type: "email", required: true },
+                { label: "Phone Number", name: "phone", type: "tel", required: true },
+              ].map((f) => (
+                <div key={f.name}>
+                  <label className="block font-semibold mb-2">
+                    {f.label} {f.required && <span className="text-primary">*</span>}
+                  </label>
+                  <input
+                    type={f.type}
+                    name={f.name}
+                    value={formData[f.name]}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 rounded-lg border bg-background
+                                focus:outline-none focus:ring-2 focus:ring-primary
+                                transition-all ${
+                                  errors[f.name] ? "border-destructive" : "border-border"
+                                }`}
+                  />
+                  {errors[f.name] && (
+                    <p className="mt-1 text-sm text-destructive">{errors[f.name]}</p>
+                  )}
+                </div>
+              ))}
 
-              {/* Email Field */}
+              {/* MEMBERSHIP TYPE */}
               <div>
-                <label htmlFor="email" className="block font-semibold text-foreground mb-2">
-                  Email Address <span className="text-primary">*</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Enter your email"
-                  className={`w-full px-4 py-3 rounded-lg border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all ${
-                    errors.email ? 'border-destructive' : 'border-border'
-                  }`}
-                  aria-describedby={errors.email ? 'email-error' : undefined}
-                />
-                {errors.email && (
-                  <p id="email-error" className="mt-2 text-sm text-destructive">{errors.email}</p>
-                )}
-              </div>
-
-              {/* Phone Field */}
-              <div>
-                <label htmlFor="phone" className="block font-semibold text-foreground mb-2">
-                  Phone Number <span className="text-primary">*</span>
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="Enter your 10-digit phone number"
-                  className={`w-full px-4 py-3 rounded-lg border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all ${
-                    errors.phone ? 'border-destructive' : 'border-border'
-                  }`}
-                  aria-describedby={errors.phone ? 'phone-error' : undefined}
-                />
-                {errors.phone && (
-                  <p id="phone-error" className="mt-2 text-sm text-destructive">{errors.phone}</p>
-                )}
-              </div>
-
-              {/* Organization Selector */}
-              <div>
-                <label htmlFor="organization" className="block font-semibold text-foreground mb-2">
-                  Organization
-                </label>
-                <select
-                  id="organization"
-                  name="organization"
-                  value={formData.organization}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                >
-                  <option value="aisf">AISF - All India Students' Federation</option>
-                  <option value="aiyf">AIYF - All India Youth Federation</option>
-                </select>
-              </div>
-
-              {/* Membership Type */}
-              <div>
-                <label className="block font-semibold text-foreground mb-3">
-                  I want to
-                </label>
+                <label className="block font-semibold mb-3">I want to</label>
                 <div className="grid grid-cols-2 gap-4">
                   {[
-                    { value: 'member', label: 'Become a Member' },
-                    { value: 'volunteer', label: 'Volunteer' },
-                  ].map((option) => (
+                    { value: "member", label: "Become a Member" },
+                    { value: "volunteer", label: "Volunteer" },
+                  ].map((opt) => (
                     <label
-                      key={option.value}
-                      className={`flex items-center justify-center gap-2 p-4 rounded-lg border cursor-pointer transition-all ${
-                        formData.membershipType === option.value
-                          ? 'border-primary bg-primary/5 text-primary'
-                          : 'border-border hover:border-primary/50'
-                      }`}
+                      key={opt.value}
+                      className={`p-4 rounded-lg border cursor-pointer text-center
+                                  transition-all ${
+                                    formData.membershipType === opt.value
+                                      ? "border-primary bg-primary/10 text-primary"
+                                      : "border-border hover:border-primary/50"
+                                  }`}
                     >
                       <input
                         type="radio"
                         name="membershipType"
-                        value={option.value}
-                        checked={formData.membershipType === option.value}
+                        value={opt.value}
+                        checked={formData.membershipType === opt.value}
                         onChange={handleChange}
                         className="sr-only"
                       />
-                      <span className="font-medium">{option.label}</span>
+                      <span className="font-medium">{opt.label}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              {/* Message Field */}
+              {/* MESSAGE */}
               <div>
-                <label htmlFor="message" className="block font-semibold text-foreground mb-2">
+                <label className="block font-semibold mb-2">
                   Why do you want to join? (Optional)
                 </label>
                 <textarea
-                  id="message"
                   name="message"
+                  rows={4}
                   value={formData.message}
                   onChange={handleChange}
-                  placeholder="Tell us about yourself and why you want to join..."
-                  rows={4}
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none"
+                  className="w-full px-4 py-3 rounded-lg border border-border
+                             resize-none focus:outline-none focus:ring-2
+                             focus:ring-primary transition-all"
                 />
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full btn-primary text-lg py-4"
+                className="w-full text-lg py-4
+                           bg-primary text-primary-foreground
+                           font-semibold rounded-lg
+                           hover:bg-primary/90 transition-all"
               >
                 Submit Application
               </button>
 
               <p className="text-center text-sm text-muted-foreground">
-                By joining, you agree to uphold the values and principles of {organization.shortName}.
+                By joining, you agree to uphold the values of {organization.shortName}.
               </p>
             </form>
           </div>
