@@ -42,7 +42,7 @@ const Footer = ({ organization }) => {
       {/* MAIN FOOTER */}
       <div className="container-custom section-padding pb-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          
+
           {/* ORGANIZATION INFO */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-4 mb-5">
@@ -50,8 +50,8 @@ const Footer = ({ organization }) => {
                 src={logo}
                 alt={`${organization.shortName} Logo`}
                 className={`h-14 md:h-16 w-auto
-                            transition-transform duration-500
-                            hover:scale-105 ${glow}`}
+                              transition-transform duration-500
+                              hover:scale-105 ${glow}`}
               />
               <div>
                 <h3 className="font-display text-xl">
@@ -132,10 +132,10 @@ const Footer = ({ organization }) => {
                   rel="noopener noreferrer"
                   aria-label={social.label}
                   className="w-10 h-10 rounded-full
-                             bg-background/10 flex items-center justify-center
-                             hover:bg-primary hover:text-primary-foreground
-                             transition-all duration-300
-                             hover:-translate-y-1"
+                              bg-background/10 flex items-center justify-center
+                              hover:bg-primary hover:text-primary-foreground
+                              transition-all duration-300
+                              hover:-translate-y-1"
                 >
                   <social.icon size={18} />
                 </a>
@@ -146,18 +146,35 @@ const Footer = ({ organization }) => {
       </div>
 
       {/* BOTTOM BAR */}
+      {/* BOTTOM BAR */}
       <div className="border-t border-background/10">
         <div className="container-custom py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-background/60">
+
             <p>
               © {currentYear} {organization.name}. All rights reserved.
             </p>
+
             <p>
               Founded in {organization.founded} · Building a Progressive India
             </p>
           </div>
+
+          {/* 👇 DEVELOPER CREDIT */}
+          <div className="mt-4 text-center text-xs text-background/50">
+            Developed &amp; Maintained by{" "}
+            <a
+              href="https://ai-engineer-portfolio-iota.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-primary hover:text-primary-light transition-colors underline underline-offset-4"
+            >
+              Nandisha
+            </a>
+          </div>
         </div>
       </div>
+
     </footer>
   );
 };
